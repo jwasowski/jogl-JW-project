@@ -10,7 +10,7 @@ import com.jogamp.opengl.GLEventListener;
 import gfxJWproject.Utils.DeallocationHelper;
 import gfxJWproject.Utils.GfxShaderProgramService;
 
-public class GfxObject implements GLEventListener {
+public class GfxObject  {
 
 	protected final int[] vao = new int[1];
 	protected final int[] vboVertex = new int[1];
@@ -22,24 +22,24 @@ public class GfxObject implements GLEventListener {
 	private FloatBuffer fbColors;
 	private DeallocationHelper deallocator = new DeallocationHelper();
 
-	@Override
+	
 	public void init(GLAutoDrawable drawable) {
 		
 	}
 
-	@Override
+	
 	public void dispose(GLAutoDrawable drawable) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+	
 	public void display(GLAutoDrawable drawable) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+	
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 		// TODO Auto-generated method stub
 
@@ -60,9 +60,10 @@ public class GfxObject implements GLEventListener {
 		gl4.glDisableVertexAttribArray(1);
 		gl4.glDisableVertexAttribArray(0);
 		gl4.glBindBuffer(GL2.GL_ARRAY_BUFFER, 0);
+		//TODO build on linux
 		deallocator.deallocate(fbColors);
 		deallocator.deallocate(fbVertices);
-		//gl4.glDeleteBuffers(1, fbColors);
+				//gl4.glDeleteBuffers(1, fbColors);
 		//gl4.glDeleteBuffers(1, null /*fbVertices*/);
 
 		gl4.glBindVertexArray(0);

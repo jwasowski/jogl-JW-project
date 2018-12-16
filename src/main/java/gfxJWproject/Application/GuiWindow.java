@@ -9,14 +9,16 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
 
 import gfxJWproject.Objects.GfxObject;
 
-public class GuiWindow extends JFrame implements KeyListener {
+public class GuiWindow extends JFrame implements KeyListener, GLEventListener {
 
 	/**
 	 * 
@@ -29,14 +31,14 @@ public class GuiWindow extends JFrame implements KeyListener {
 	private FPSAnimator animatorTest;
 	private List<GfxObject> dataL;
 	private Iterator<GfxObject> dataIterator;
-	
-	
+	private GfxObject currentlyDrawn;
 
 	public GuiWindow(String name, int width, int height, List<GfxObject> dataL) {
 		super(name);
 		glProfile = GLProfile.get(GLProfile.GL2);
 		canvas = new GLCanvas(glCapabilities);
 		dataIterator = dataL.iterator();
+		currentlyDrawn = dataL.get(0);
 		glCapabilities = new GLCapabilities(glProfile);
 		glCapabilities.setSampleBuffers(false);
 		animatorTest = new FPSAnimator(60);
@@ -55,6 +57,7 @@ public class GuiWindow extends JFrame implements KeyListener {
 		canvas.setSize(width, height);
 		canvas.setFocusable(false);
 		add(canvas);
+		canvas.addGLEventListener(this);
 		System.out.println("Chosen GLCapabilities: " + canvas.getChosenGLCapabilities());
 	}
 
@@ -66,17 +69,16 @@ public class GuiWindow extends JFrame implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-			if(dataIterator.hasNext()){
-			canvas.addGLEventListener(dataIterator.next());}
-			else {
-				deleteAllGLEvenetListeners(dataL);
+			if (dataIterator.hasNext()) {
+				currentlyDrawn = dataIterator.next();
+			} else {
 				dataIterator = dataL.iterator();
-				canvas.addGLEventListener(dataL.get(0));
+				currentlyDrawn = dataL.get(0);
 				dataIterator.next();
 			}
 		}
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-			
+
 			shutDown();
 		}
 
@@ -86,17 +88,39 @@ public class GuiWindow extends JFrame implements KeyListener {
 	public void keyReleased(KeyEvent e) {
 
 	}
-	private void shutDown(){
+
+	private void shutDown() {
 		System.out.println("Shut down");
 		animatorTest.stop();
 		dispose();
 		System.exit(0);
 	}
-	
-	private void deleteAllGLEvenetListeners(List<GfxObject> objectList){
-		for(GfxObject object : objectList){
-			canvas.disposeGLEventListener(object,false);
+
+	@Override
+	public void init(GLAutoDrawable drawable) {
+		for (GfxObject gfx : dataL) {
+			gfx.init(drawable);
 		}
+
+	}
+
+	@Override
+	public void dispose(GLAutoDrawable drawable) {
+		for (GfxObject gfx : dataL) {
+			gfx.dispose(drawable);
+		}
+
+	}
+
+	@Override
+	public void display(GLAutoDrawable drawable) {
+		currentlyDrawn.display(drawable);
+	}
+
+	@Override
+	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+		currentlyDrawn.reshape(drawable, x, y, width, height);
+
 	}
 
 }
