@@ -3,11 +3,11 @@ package gfxJWproject.Application;
 import java.util.ArrayList;
 import java.util.List;
 
-import gfxJWproject.Objects.Circle;
-import gfxJWproject.Objects.CircleFilled;
-import gfxJWproject.Objects.GfxObject;
-import gfxJWproject.Objects.StarContour;
-import gfxJWproject.Objects.StarFilled;
+import gfxJWproject.TwoDimensionObjects.Circle;
+import gfxJWproject.TwoDimensionObjects.CircleFilled;
+import gfxJWproject.TwoDimensionObjects.GfxObject;
+import gfxJWproject.TwoDimensionObjects.StarContour;
+import gfxJWproject.TwoDimensionObjects.StarFilled;
 
 public class AppDataObject {
 	

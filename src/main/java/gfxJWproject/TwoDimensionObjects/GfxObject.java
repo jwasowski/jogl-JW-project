@@ -1,11 +1,10 @@
-package gfxJWproject.Objects;
+package gfxJWproject.TwoDimensionObjects;
 
 import java.nio.FloatBuffer;
 
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLEventListener;
 
 import gfxJWproject.Utils.DeallocationHelper;
 import gfxJWproject.Utils.GfxShaderProgramService;
@@ -46,13 +45,13 @@ public class GfxObject  {
 	}
 
 	public void initProgram(GL2 gl4) {
-		program = programService.initProgram(gl4);
+		program = programService.initProgramTwoDimension(gl4);
 	}
 	
 	public void disposeProgram(GL2 gl4){
 		program = 0;
 		if(programService.getProgram() != null){
-		programService.disposeProgram(gl4);}
+		programService.disposeProgramGL2(gl4);}
 	}
 
 	public void clearResources(GL2 gl4) {
@@ -60,7 +59,7 @@ public class GfxObject  {
 		gl4.glDisableVertexAttribArray(1);
 		gl4.glDisableVertexAttribArray(0);
 		gl4.glBindBuffer(GL2.GL_ARRAY_BUFFER, 0);
-		//TODO build on linux
+		//TODO find a solution for java11
 		deallocator.deallocate(fbColors);
 		deallocator.deallocate(fbVertices);
 				//gl4.glDeleteBuffers(1, fbColors);

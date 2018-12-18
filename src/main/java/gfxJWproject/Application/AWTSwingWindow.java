@@ -16,9 +16,9 @@ import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
 
-import gfxJWproject.Objects.GfxObject;
+import gfxJWproject.TwoDimensionObjects.GfxObject;
 
-public class GuiWindow extends JFrame implements KeyListener, GLEventListener {
+public class AWTSwingWindow extends JFrame implements KeyListener, GLEventListener {
 
 	/**
 	 * 
@@ -33,7 +33,7 @@ public class GuiWindow extends JFrame implements KeyListener, GLEventListener {
 	private Iterator<GfxObject> dataIterator;
 	private GfxObject currentlyDrawn;
 
-	public GuiWindow(String name, int width, int height, List<GfxObject> dataL) {
+	public AWTSwingWindow(String name, int width, int height, List<GfxObject> dataL) {
 		super(name);
 		glProfile = GLProfile.get(GLProfile.GL2);
 		canvas = new GLCanvas(glCapabilities);

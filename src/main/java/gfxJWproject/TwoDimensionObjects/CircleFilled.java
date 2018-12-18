@@ -1,4 +1,4 @@
-package gfxJWproject.Objects;
+package gfxJWproject.TwoDimensionObjects;
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
