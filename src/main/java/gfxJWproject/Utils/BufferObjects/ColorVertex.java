@@ -15,7 +15,7 @@ public class ColorVertex {
 
 	public float[] returnPair() {
 		float[] returnArray = new float[sizeOfArrays()];
-		for (int i = 0; i <= returnArray.length / 2; i++) {
+		for (int i = 0; i < returnArray.length / 2; i++) {
 			returnArray[i] = position[i];
 			returnArray[i + position.length] = color[i];
 		}

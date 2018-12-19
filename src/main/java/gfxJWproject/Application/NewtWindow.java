@@ -5,6 +5,7 @@ import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.event.WindowAdapter;
 import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
@@ -12,6 +13,8 @@ import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.util.FPSAnimator;
 
 import gfxJWproject.ThreeDimensionObjects.KDron;
+import gfxJWproject.Utils.GfxCameraShaderProgramService;
+import gfxJWproject.Utils.MatrixService;
 
 public class NewtWindow implements GLEventListener, KeyListener {
 
@@ -22,8 +25,17 @@ public class NewtWindow implements GLEventListener, KeyListener {
 	private final GLWindow window;
 	final private FPSAnimator animator;
 	private KDron currentlyDrawn;
+	private MatrixService matrixService = new MatrixService();
+	private GfxCameraShaderProgramService programService = GfxCameraShaderProgramService.getInstance();
+	private int cameraProgram;
+	private float[] projectionMatrix = new float[16];
+	private float[] viewMatrix = new float[16];
+	private int width;
+	private int height;
 
 	public NewtWindow(String name, int width, int height) {
+		this.width = width;
+		this.height = height;
 		currentlyDrawn = new KDron();
 		glp = GLProfile.getDefault();
 		caps = new GLCapabilities(glp);
@@ -45,7 +57,14 @@ public class NewtWindow implements GLEventListener, KeyListener {
 
 	@Override
 	public void init(GLAutoDrawable drawable) {
+		final GL4 gl4 = drawable.getGL().getGL4();
+		//TODO Init Camera (view and projection matrices)
 		currentlyDrawn.init(drawable);
+		cameraProgram = programService.initProgram(gl4);
+		matrixService.translate(viewMatrix, 0, 0, -2);
+		programService.setViewMatrix(gl4, viewMatrix);
+		matrixService.createProjectionMatrix(projectionMatrix, 60, (float) width/(float)height, 0.1f, 100.0f);
+		programService.setProjectionMatrix(gl4, projectionMatrix);
 
 	}
 
@@ -80,7 +99,7 @@ public class NewtWindow implements GLEventListener, KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
+		
 
 	}
 

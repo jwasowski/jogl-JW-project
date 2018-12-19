@@ -7,14 +7,14 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 
 import gfxJWproject.Utils.DeallocationHelper;
-import gfxJWproject.Utils.GfxShaderProgramService;
+import gfxJWproject.Utils.GfxTwoDShaderProgramService;
 
 public class GfxObject  {
 
 	protected final int[] vao = new int[1];
 	protected final int[] vboVertex = new int[1];
 	protected final int[] vboColor = new int[1];
-	private GfxShaderProgramService programService = GfxShaderProgramService.getInstance();
+	private GfxTwoDShaderProgramService programService = GfxTwoDShaderProgramService.getInstance();
 	protected int program;
 	protected int valuesPerVertex = 4;
 	private FloatBuffer fbVertices;
@@ -28,30 +28,30 @@ public class GfxObject  {
 
 	
 	public void dispose(GLAutoDrawable drawable) {
-		// TODO Auto-generated method stub
+		
 
 	}
 
 	
 	public void display(GLAutoDrawable drawable) {
-		// TODO Auto-generated method stub
+		
 
 	}
 
 	
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-		// TODO Auto-generated method stub
+		
 
 	}
 
 	public void initProgram(GL2 gl4) {
-		program = programService.initProgramTwoDimension(gl4);
+		program = programService.initProgram(gl4);
 	}
 	
 	public void disposeProgram(GL2 gl4){
 		program = 0;
 		if(programService.getProgram() != null){
-		programService.disposeProgramGL2(gl4);}
+		programService.disposeProgram(gl4);}
 	}
 
 	public void clearResources(GL2 gl4) {
