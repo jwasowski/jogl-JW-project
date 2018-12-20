@@ -17,9 +17,9 @@ import gfxJWproject.Utils.MatrixService;
 import gfxJWproject.Utils.BufferObjects.ColorVertex;
 
 public class KDron {
-	private GfxModelShaderProgramService programService = GfxModelShaderProgramService.getInstance();
+	public GfxModelShaderProgramService programService = new GfxModelShaderProgramService();
 	//TODO Check program init value
-	protected int modelProgram;
+	public int modelProgram;
 	protected final int[] vertexArrayObject = new int[1];
 	protected final int[] vertexBufferObject = new int[1];
 	final float[] modelMatrix = new float[16];
@@ -51,6 +51,7 @@ public class KDron {
 		gl4.glEnable(GL4.GL_DEPTH_TEST);
 		if(modelProgram == 0){
 		modelProgram = programService.initProgram(gl4);}
+		System.out.println("Modelprogram: "+modelProgram);
 		matrixService.setupUnitMatrix(modelMatrix);
 		// Voa Setup
 		gl4.glGenVertexArrays(1, vertexArrayObject, 0);
@@ -97,7 +98,7 @@ public class KDron {
 
 	public void display(GLAutoDrawable drawable) {
 		final GL4 gl4 = drawable.getGL().getGL4();
-		//gl4.glClear(GL4.GL_COLOR_BUFFER_BIT | GL4.GL_DEPTH_BUFFER_BIT);
+		gl4.glClear(GL4.GL_COLOR_BUFFER_BIT | GL4.GL_DEPTH_BUFFER_BIT);
 		gl4.glUseProgram(modelProgram);
 		gl4.glBindVertexArray(vertexArrayObject[0]);
 		programService.setModelMatrix(gl4, modelMatrix);

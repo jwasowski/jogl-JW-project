@@ -1,53 +1,30 @@
 package gfxJWproject.Utils;
 
 import com.jogamp.opengl.GL4;
-import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 
 public class GfxCameraShaderProgramService extends GfxShaderProgramService {
-	private ShaderProgram cameraProgram;
+	private int cameraProgram;
 	private int projectionMatrixLocation;
 	private int viewMatrixLocation;
-	private ShaderCode vertexShader;
-	private ShaderCode fragmentShader;
+	private GfxShaderProgramService shaderService = new GfxShaderProgramService();
 
 	public ShaderProgram getProgram() {
-		return cameraProgram;
+		return super.getProgram();
 	}
 
-	private GfxCameraShaderProgramService() {
-
-	}
-
-	public static GfxCameraShaderProgramService getInstance() {
-		return GfxCameraShaderProgramHolder.INSTANCE;
-	}
-
-	private static class GfxCameraShaderProgramHolder {
-		private static final GfxCameraShaderProgramService INSTANCE = new GfxCameraShaderProgramService();
-	}
-	@Override
 	public int initProgram(GL4 gl4) {
+		cameraProgram = shaderService.initProgram(gl4);
+		System.out.println("Cameraprogram: " + cameraProgram);
+		projectionMatrixLocation = getUniformLocation("projectionMatrix", gl4);
+		viewMatrixLocation = getUniformLocation("viewMatrix", gl4);
 
-		vertexShader = ShaderCode.create(gl4, GL4.GL_VERTEX_SHADER, this.getClass(), "shaders", null, "3dvertex", null,
-				null, true);
-		fragmentShader = ShaderCode.create(gl4, GL4.GL_FRAGMENT_SHADER, this.getClass(), "shaders", null, "3dfragment",
-				null, null, true);
-
-		cameraProgram = new ShaderProgram();
-		cameraProgram.add(vertexShader);
-		cameraProgram.add(fragmentShader);
-		cameraProgram.link(gl4, System.out);
-		cameraProgram.validateProgram(gl4, System.err);
-		projectionMatrixLocation = getUniformLocation("projection_matrix", gl4);
-		viewMatrixLocation = getUniformLocation("view_matrix", gl4);
-
-		return cameraProgram.program();
+		return cameraProgram;
 	}
 
 	public int getUniformLocation(String name, GL4 gl4) {
 		int location = -1;
-		location = gl4.glGetUniformLocation(cameraProgram.id(), name);
+		location = gl4.glGetUniformLocation(cameraProgram, name);
 		if (location < 0) {
 			System.err.println("ERROR: Cannot find uniform location: " + name);
 		}
@@ -55,17 +32,19 @@ public class GfxCameraShaderProgramService extends GfxShaderProgramService {
 	}
 
 	public void disposeProgram(GL4 gl4) {
-		cameraProgram.destroy(gl4);
-		// Just to be sure
-		cameraProgram = null;
+		super.disposeProgram(gl4);
 	}
-	//TODO Check bool value
-	public void setProjectionMatrix(GL4 gl4, float[] matrix) {
+
+	// TODO Check bool value
+	public void setProjectionMatrix(GL4 gl4, float[] matrix, int program) {
+		gl4.glUseProgram(program);
 		gl4.glUniformMatrix4fv(projectionMatrixLocation, 1, false, matrix, 0);
 	}
-	//TODO Check bool value
-	public void setViewMatrix(GL4 gl4, float[] matrix) {
+
+	// TODO Check bool value
+	public void setViewMatrix(GL4 gl4, float[] matrix, int program) {
+		gl4.glUseProgram(program);
 		gl4.glUniformMatrix4fv(viewMatrixLocation, 1, false, matrix, 0);
 	}
-	
+
 }

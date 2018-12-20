@@ -11,6 +11,7 @@ import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.util.FPSAnimator;
+import com.jogamp.opengl.util.glsl.ShaderProgram;
 
 import gfxJWproject.ThreeDimensionObjects.KDron;
 import gfxJWproject.Utils.GfxCameraShaderProgramService;
@@ -26,8 +27,9 @@ public class NewtWindow implements GLEventListener, KeyListener {
 	final private FPSAnimator animator;
 	private KDron currentlyDrawn;
 	private MatrixService matrixService = new MatrixService();
-	private GfxCameraShaderProgramService programService = GfxCameraShaderProgramService.getInstance();
-	private int cameraProgram;
+	//private GfxCameraShaderProgramService programService = GfxCameraShaderProgramService.getInstance();
+	//private int cameraProgram;
+	private int program;
 	private float[] projectionMatrix = new float[16];
 	private float[] viewMatrix = new float[16];
 	private int width;
@@ -59,19 +61,22 @@ public class NewtWindow implements GLEventListener, KeyListener {
 	public void init(GLAutoDrawable drawable) {
 		final GL4 gl4 = drawable.getGL().getGL4();
 		//TODO Init Camera (view and projection matrices)
+		//TODO Reduce calls to objects
 		currentlyDrawn.init(drawable);
-		cameraProgram = programService.initProgram(gl4);
+		program = currentlyDrawn.modelProgram;
+		matrixService.setupUnitMatrix(viewMatrix);
 		matrixService.translate(viewMatrix, 0, 0, -2);
-		programService.setViewMatrix(gl4, viewMatrix);
+		currentlyDrawn.programService.cameraShaderService.setViewMatrix(gl4, viewMatrix, program );
 		matrixService.createProjectionMatrix(projectionMatrix, 60, (float) width/(float)height, 0.1f, 100.0f);
-		programService.setProjectionMatrix(gl4, projectionMatrix);
-
+		currentlyDrawn.programService.cameraShaderService.setProjectionMatrix(gl4, projectionMatrix, program);
+		gl4.glEnable(GL4.GL_DEPTH_TEST);
+		gl4.glDepthFunc(GL4.GL_LESS);
+		gl4.glClearColor(0.8f, 0.9f, 1.0f, 0.0f);
 	}
 
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
 		currentlyDrawn.dispose(drawable);
-
 	}
 
 	@Override
