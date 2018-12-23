@@ -1,4 +1,4 @@
-package gfxJWproject.Utils;
+package gfxJWproject.Utils.Shaders;
 
 import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
@@ -35,13 +35,13 @@ public class GfxCameraShaderProgramService extends GfxShaderProgramService {
 		super.disposeProgram(gl4);
 	}
 
-	// TODO Check bool value
+	
 	public void setProjectionMatrix(GL4 gl4, float[] matrix, int program) {
 		gl4.glUseProgram(program);
 		gl4.glUniformMatrix4fv(projectionMatrixLocation, 1, false, matrix, 0);
 	}
 
-	// TODO Check bool value
+	
 	public void setViewMatrix(GL4 gl4, float[] matrix, int program) {
 		gl4.glUseProgram(program);
 		gl4.glUniformMatrix4fv(viewMatrixLocation, 1, false, matrix, 0);

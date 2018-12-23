@@ -7,7 +7,7 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 
 import gfxJWproject.Utils.DeallocationHelper;
-import gfxJWproject.Utils.GfxTwoDShaderProgramService;
+import gfxJWproject.Utils.Shaders.GfxTwoDShaderProgramService;
 
 public class GfxObject  {
 
@@ -79,7 +79,7 @@ public class GfxObject  {
 		gl4Interface.glGenBuffers(vboVertex.length, vboVertex, 0);
 		gl4Interface.glBindBuffer(GL2.GL_ARRAY_BUFFER, vboVertex[0]);
 		fbVertices = Buffers.newDirectFloatBuffer(kVertices);
-		final int bufferSizeInBytesVertices = kVertices.length * Buffers.SIZEOF_FLOAT;
+		final long bufferSizeInBytesVertices = kVertices.length * Buffers.SIZEOF_FLOAT;
 		gl4Interface.glBufferData(GL2.GL_ARRAY_BUFFER, bufferSizeInBytesVertices, fbVertices, GL2.GL_STATIC_DRAW);
 		gl4Interface.glVertexAttribPointer(0, valuesPerVertex, GL2.GL_FLOAT, false, 0, 0);
 		gl4Interface.glEnableVertexAttribArray(0);
@@ -87,7 +87,7 @@ public class GfxObject  {
 		gl4Interface.glGenBuffers(vboColor.length, vboColor, 0);
 		gl4Interface.glBindBuffer(GL2.GL_ARRAY_BUFFER, vboColor[0]);
 		fbColors = Buffers.newDirectFloatBuffer(kColors);
-		final int bufferSizeInBytesColors = kColors.length * Buffers.SIZEOF_FLOAT;
+		final long bufferSizeInBytesColors = kColors.length * Buffers.SIZEOF_FLOAT;
 		gl4Interface.glBufferData(GL2.GL_ARRAY_BUFFER, bufferSizeInBytesColors, fbColors, GL2.GL_STATIC_DRAW);
 		gl4Interface.glVertexAttribPointer(1, valuesPerVertex, GL2.GL_FLOAT, false, 0, 0);
 		gl4Interface.glEnableVertexAttribArray(1);

@@ -1,4 +1,4 @@
-package gfxJWproject.Utils;
+package gfxJWproject.Utils.Shaders;
 
 import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.util.glsl.ShaderCode;

@@ -1,4 +1,4 @@
-package gfxJWproject.Utils;
+package gfxJWproject.Utils.Shaders;
 
 import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
@@ -29,7 +29,6 @@ public class GfxModelShaderProgramService extends GfxCameraShaderProgramService 
 		return location;
 	}
 
-	// TODO Check bool value
 	public void setModelMatrix(GL4 gl4, float[] matrix) {
 		gl4.glUniformMatrix4fv(modelMatrixLocation, 1, false, matrix, 0);
 	}
