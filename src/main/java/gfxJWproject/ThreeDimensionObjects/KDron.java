@@ -99,6 +99,7 @@ public class KDron implements IGfxThreeDObject {
 	 */
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
+		// TODO Find better way to deallocate buffers
 		final GL4 gl4 = drawable.getGL().getGL4();
 		gl4.glDisableVertexAttribArray(1);
 		gl4.glDisableVertexAttribArray(0);

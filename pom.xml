@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>gfxJWproject</groupId>
 	<artifactId>jogl-JW-project</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.7.5-SNAPSHOT</version>
 	<name>Jogl basics project</name>
 	<dependencies>
 		<dependency>
