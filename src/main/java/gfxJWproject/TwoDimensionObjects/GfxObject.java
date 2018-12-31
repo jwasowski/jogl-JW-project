@@ -59,9 +59,15 @@ public class GfxObject  {
 		gl4.glDisableVertexAttribArray(1);
 		gl4.glDisableVertexAttribArray(0);
 		gl4.glBindBuffer(GL2.GL_ARRAY_BUFFER, 0);
-		//TODO find a solution for java11
+		// Supports: Java 8, 9, but version 11 is not supported by deallocator class
+		if ("8".equals(System.getProperty("java.version").substring(2, 3))
+				|| "9".equals(System.getProperty("java.version"))) {
 		deallocator.deallocate(fbColors);
-		deallocator.deallocate(fbVertices);
+		deallocator.deallocate(fbVertices);}
+		else {
+			System.err.println(
+					"Java version: " + System.getProperty("java.version") + " is not supported by buffer deallocator.");
+		}
 				//gl4.glDeleteBuffers(1, fbColors);
 		//gl4.glDeleteBuffers(1, null /*fbVertices*/);
 

@@ -13,7 +13,7 @@ import gfxJWproject.Utils.MatrixService;
 import gfxJWproject.Utils.Shaders.GfxModelShaderProgramService;
 
 public class KDron implements IGfxThreeDObject {
-	private GfxModelShaderProgramService programService /*= new GfxModelShaderProgramService()*/;
+	private GfxModelShaderProgramService programService;
 	
 	private int modelProgram;
 	protected final int[] vertexArrayObject = new int[1];
