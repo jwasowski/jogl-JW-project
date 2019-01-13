@@ -18,6 +18,7 @@ import gfxJWproject.ThreeDimensionObjects.MarsScene;
 import gfxJWproject.Utils.DeallocationHelper;
 import gfxJWproject.Utils.MatrixService;
 import gfxJWproject.Utils.Shaders.GfxModelShaderProgramService;
+import gfxJWproject.Utils.Shaders.GfxTextureShaderProgramService;
 
 public class NewtWindowMars implements GLEventListener{
 	private final GLProfile glp;
@@ -28,7 +29,7 @@ public class NewtWindowMars implements GLEventListener{
 	final private FPSAnimator animator;
 	private IGfxThreeDObject currentlyDrawn;
 	private MatrixService matrixService;
-	private GfxModelShaderProgramService modelProgramService;
+	private GfxTextureShaderProgramService textureProgramService;
 	private DeallocationHelper deallocator;
 	private int program;
 	private float[] projectionMatrix = new float[16];
@@ -39,10 +40,10 @@ public class NewtWindowMars implements GLEventListener{
 	public NewtWindowMars(String name, int width, int height) {
 		this.width = width;
 		this.height = height;
-		modelProgramService = new GfxModelShaderProgramService();
+		textureProgramService = new GfxTextureShaderProgramService();
 		matrixService = new MatrixService();
 		deallocator = new DeallocationHelper();
-		currentlyDrawn = new MarsScene(modelProgramService, matrixService, deallocator);
+		currentlyDrawn = new MarsScene(textureProgramService, matrixService, deallocator, 20,30,2.0f,0.75f);
 		glp = GLProfile.getDefault();
 		caps = new GLCapabilities(glp);
 		window = GLWindow.create(caps);
@@ -64,17 +65,20 @@ public class NewtWindowMars implements GLEventListener{
 	@Override
 	public void init(GLAutoDrawable drawable) {
 		final GL4 gl4 = drawable.getGL().getGL4();
-		program = modelProgramService.initProgram(gl4);
+		program = textureProgramService.initProgram(gl4);
 		currentlyDrawn.setModelProgram(program);
 		currentlyDrawn.init(drawable);
+		matrixService.setupUnitMatrix(viewMatrix);
+		matrixService.translate(viewMatrix, 0, 0, -6);
 		System.out.println("View matrix-init: " + Arrays.toString(viewMatrix));
-		modelProgramService.cameraShaderService.setViewMatrix(gl4, viewMatrix, program);
+		textureProgramService.setViewMatrix(gl4, viewMatrix, program);
 		projectionMatrix = matrixService.createProjectionMatrix(60, (float) width / (float) height, 0.5f, 100.0f);
 		System.out.println("Projection matrix-init: " + Arrays.toString(projectionMatrix));
-		modelProgramService.cameraShaderService.setProjectionMatrix(gl4, projectionMatrix, program);
+		textureProgramService.setProjectionMatrix(gl4, projectionMatrix, program);
+		System.out.println("AutoSwapStatus: "+ window.getAutoSwapBufferMode());
 		gl4.glEnable(GL4.GL_DEPTH_TEST);
 		gl4.glDepthFunc(GL4.GL_LESS);
-		gl4.glClearColor(0.8f, 0.9f, 1.0f, 0.0f);
+		gl4.glClearColor(0.25f, 0.75f, 0.35f, 0.0f);
 		
 	}
 
@@ -87,8 +91,8 @@ public class NewtWindowMars implements GLEventListener{
 	public void display(GLAutoDrawable drawable) {
 		final GL4 gl4 = drawable.getGL().getGL4();
 		currentlyDrawn.display(drawable);
-		modelProgramService.cameraShaderService.setViewMatrix(gl4, viewMatrix, program);
-		modelProgramService.cameraShaderService.setProjectionMatrix(gl4, projectionMatrix, program);
+		textureProgramService.setViewMatrix(gl4, viewMatrix, program);
+		textureProgramService.setProjectionMatrix(gl4, projectionMatrix, program);
 		gl4.glUseProgram(0);
 	}
 
@@ -97,7 +101,7 @@ public class NewtWindowMars implements GLEventListener{
 		final GL4 gl4 = drawable.getGL().getGL4();
 		projectionMatrix = matrixService.createProjectionMatrix(60, (float) width / (float) height, 0.1f, 100.0f);
 		System.out.println("Projection matrix-reshape: " + Arrays.toString(projectionMatrix));
-		modelProgramService.cameraShaderService.setProjectionMatrix(gl4, projectionMatrix, program);
+		textureProgramService.setProjectionMatrix(gl4, projectionMatrix, program);
 		currentlyDrawn.reshape(drawable, 0, 0, width, height);
 	}
 	

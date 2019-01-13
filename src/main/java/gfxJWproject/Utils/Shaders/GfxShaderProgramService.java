@@ -13,9 +13,9 @@ public  class GfxShaderProgramService {
 	}
 
 	public  int initProgram(GL4 gl4){
-		vertexShader = ShaderCode.create(gl4, GL4.GL_VERTEX_SHADER, this.getClass(), "shaders", null, "3dvertex", null,
+		vertexShader = ShaderCode.create(gl4, GL4.GL_VERTEX_SHADER, this.getClass(), "shaders", null, /*"3dvertex"*/"textureVertex", null,
 				null, true);
-		fragmentShader = ShaderCode.create(gl4, GL4.GL_FRAGMENT_SHADER, this.getClass(), "shaders", null, "3dfragment",
+		fragmentShader = ShaderCode.create(gl4, GL4.GL_FRAGMENT_SHADER, this.getClass(), "shaders", null, /*"3dfragment"*/"textureFragment",
 				null, null, true);
 		program = new ShaderProgram();
 		program.add(vertexShader);

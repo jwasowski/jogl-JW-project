@@ -20,7 +20,7 @@ public class KDron implements IGfxThreeDObject {
 	protected final int[] vertexBufferObject = new int[1];
 	public float[] modelMatrix = new float[16];
 	protected FloatBuffer fbVertices;
-	protected IntBuffer ibBIndices;
+	protected IntBuffer ibIndices;
 	private DeallocationHelper deallocator;
 	protected final int[] indexBufferObject = new int[1];
 	private MatrixService matrixService;
@@ -87,9 +87,9 @@ public class KDron implements IGfxThreeDObject {
 		// Indices buffer Setup
 		gl4.glGenBuffers(indexBufferObject.length, indexBufferObject, 0);
 		gl4.glBindBuffer(GL4.GL_ELEMENT_ARRAY_BUFFER, indexBufferObject[0]);
-		ibBIndices = Buffers.newDirectIntBuffer(kIndices);
+		ibIndices = Buffers.newDirectIntBuffer(kIndices);
 		final int indicesBufferSizeInBytes = kIndices.length * Buffers.SIZEOF_INT;
-		gl4.glBufferData(GL4.GL_ELEMENT_ARRAY_BUFFER, indicesBufferSizeInBytes, ibBIndices, GL4.GL_STATIC_DRAW);
+		gl4.glBufferData(GL4.GL_ELEMENT_ARRAY_BUFFER, indicesBufferSizeInBytes, ibIndices, GL4.GL_STATIC_DRAW);
 		gl4.glBindBuffer(GL4.GL_ARRAY_BUFFER, 0);
 		gl4.glBindVertexArray(0);
 	}
@@ -104,10 +104,9 @@ public class KDron implements IGfxThreeDObject {
 		gl4.glDisableVertexAttribArray(1);
 		gl4.glDisableVertexAttribArray(0);
 		gl4.glBindBuffer(GL4.GL_ARRAY_BUFFER, 0);
-		// TODO Test with different than java 8 versions
 		if ("8".equals(System.getProperty("java.version").substring(2, 3))
 				|| "9".equals(System.getProperty("java.version"))) {
-			deallocator.deallocate(ibBIndices);
+			deallocator.deallocate(ibIndices);
 			deallocator.deallocate(fbVertices);
 		} else {
 			System.err.println(
