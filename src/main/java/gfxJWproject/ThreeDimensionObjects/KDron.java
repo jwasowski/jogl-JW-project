@@ -7,6 +7,7 @@ import java.util.Arrays;
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.util.texture.Texture;
 
 import gfxJWproject.Utils.DeallocationHelper;
 import gfxJWproject.Utils.MatrixService;
@@ -175,6 +176,18 @@ public class KDron implements IGfxThreeDObject {
 	@Override
 	public void rotateYAxisRight() {
 		matrixService.rotateAboutYAxis(modelMatrix, 5);
+	}
+
+	@Override
+	public void setTexture(Texture t) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setTextureUnit(int unit) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

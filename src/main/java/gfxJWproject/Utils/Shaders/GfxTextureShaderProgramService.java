@@ -5,7 +5,7 @@ import com.jogamp.opengl.util.glsl.ShaderProgram;
 
 public class GfxTextureShaderProgramService extends GfxModelShaderProgramService{
 	private int textureProgram;
-	private int textureUnitLocation;
+	public int textureUnit;
 	public GfxModelShaderProgramService modelShaderService = new GfxModelShaderProgramService();
 
 	public ShaderProgram getProgram() {
@@ -14,7 +14,7 @@ public class GfxTextureShaderProgramService extends GfxModelShaderProgramService
 
 	public int initProgram(GL4 gl4) {
 		textureProgram = modelShaderService.initProgram(gl4);
-		textureUnitLocation = getUniformLocation("texture_unit", gl4);
+		textureUnit = getUniformLocation("texture_unit", gl4);
 
 		return textureProgram;
 	}
@@ -29,7 +29,7 @@ public class GfxTextureShaderProgramService extends GfxModelShaderProgramService
 	}
 
 	public void setTextureUnit(GL4 gl4, int t) {
-		gl4.glUniform1i(textureUnitLocation, t);
+		gl4.glUniform1i(textureUnit, t);
 	}
 
 	public void disposeProgram(GL4 gl4) {

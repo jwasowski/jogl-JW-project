@@ -31,8 +31,8 @@ public class MarsScene implements IGfxThreeDObject {
 	private DeallocationHelper deallocator;
 	protected final int[] indexBufferObject = new int[1];
 	private MatrixService matrixService;
-	private TextureIO textureService;
 	private Texture texture;
+	private int textureUnit;
 	private int m;
 	private int n;
 	private float r;
@@ -49,7 +49,7 @@ public class MarsScene implements IGfxThreeDObject {
 		this.n=n;
 		this.r=r;
 		this.R=R;
-		textureVertex = new float[(m+1)*(n+1)];
+		textureVertex = new float[((m+1)*(n+1))*6]; //651*6
 		indices= new int[2*n*(m + 1)];
 	}
 
@@ -63,40 +63,36 @@ public class MarsScene implements IGfxThreeDObject {
 		this.textureProgram = textureProgram;
 
 	}
+	@Override
+	public void setTexture(Texture texture) {
+		this.texture = texture;
+	}
+
+	public void setTextureUnit(int textureUnit) {
+		this.textureUnit = textureUnit;
+	}
 
 	@Override
 	public void init(GLAutoDrawable drawable) {
 		final GL4 gl4 = drawable.getGL().getGL4();
 		System.out.println("GL_RENDERER: " + gl4.glGetString(GL4.GL_RENDERER));
 		System.out.println("GL_VERSION: " + gl4.glGetString(GL4.GL_VERSION));
-		try {
-			texture = TextureIO.newTexture(this.getClass().getResource("/textures/mars_1k_color.jpg"), false, null);
-			gl4.glTexParameteri(GL4.GL_TEXTURE_2D, GL4.GL_TEXTURE_MIN_FILTER, GL4.GL_LINEAR);
-			gl4.glTexParameteri(GL4.GL_TEXTURE_2D, GL4.GL_TEXTURE_MAG_FILTER, GL4.GL_LINEAR);
-			gl4.glTexParameteri(GL4.GL_TEXTURE_2D, GL4.GL_TEXTURE_WRAP_S, GL4.GL_REPEAT);
-			gl4.glTexParameteri(GL4.GL_TEXTURE_2D, GL4.GL_TEXTURE_WRAP_T, GL4.GL_REPEAT);
-		} catch (GLException e) {
-			System.err.println("Error loading texture");
-			e.printStackTrace();
-		} catch (IOException e) {
-			System.err.println("Error loading texture");
-			e.printStackTrace();
-		}
 		matrixService.setupUnitMatrix(modelMatrix);
+		int counter = 0;
 		for (int i=0;i<=n;i++) {
-		      float phi=(float) ( 2*Math.PI/(float)n*i);
+		      float phi=(float) ( Math.PI/2+Math.PI/(float)n*i);
 		      for (int j=0;j<=m;j++){
 		        float theta=(float) (2*Math.PI/m*j);
 		       //TODO Fix this algorithm data assignment
-		        textureVertex[i*j+0]=(float) ((R + r*Math.cos(phi))*Math.sin(theta));
-		        textureVertex[i*j+1]=(float) (r*Math.sin(phi));
-		        textureVertex[i*j+2]=(float) ((R + r*Math.cos(phi))*Math.cos(theta));
-		        textureVertex[i*j+3]=1.0f;
-		        textureVertex[i*j+4]=(float)j/(float)m;
-		        textureVertex[i*j+5]=(float)i/(float)n;
+		        textureVertex[counter++]=(float) ((R*Math.cos(phi))*Math.sin(theta));
+		        textureVertex[counter++]=(float) (R*Math.sin(phi));
+		        textureVertex[counter++]=(float) ((R*Math.cos(phi))*Math.cos(theta));
+		        textureVertex[counter++]=1.0f;
+		        textureVertex[counter++]=(float)j/(float)m;
+		        textureVertex[counter++]=(float)i/(float)n;
 		      }
 		    }
-		System.out.println("TextureVertex-init: "+Arrays.toString(textureVertex));
+		//System.out.println("TextureVertex-init: "+Arrays.toString(textureVertex));
 		int k=0;
 	    for(int i=0; i<=n - 1; i++){
 	        for(int j=0; j<=m; j++){
@@ -126,8 +122,8 @@ public class MarsScene implements IGfxThreeDObject {
 	 		gl4.glBufferData(GL4.GL_ARRAY_BUFFER, verticesBufferSizeInBytes, fbVertices, GL4.GL_STATIC_DRAW);
 	 		gl4.glVertexAttribPointer(0, 4, GL4.GL_FLOAT, false, stride, 0);
 	 		gl4.glEnableVertexAttribArray(0);
-	 		gl4.glVertexAttribPointer(1, 4, GL4.GL_FLOAT, false, stride, textureOffset);
-	 		gl4.glEnableVertexAttribArray(1);
+	 		gl4.glVertexAttribPointer(2, 4, GL4.GL_FLOAT, false, stride, textureOffset);
+	 		gl4.glEnableVertexAttribArray(2);
 	 		// Indices buffer Setup
 	 		gl4.glGenBuffers(indexBufferObject.length, indexBufferObject, 0);
 	 		gl4.glBindBuffer(GL4.GL_ELEMENT_ARRAY_BUFFER, indexBufferObject[0]);
@@ -170,15 +166,17 @@ public class MarsScene implements IGfxThreeDObject {
 		gl4.glUseProgram(textureProgram);
 		programService.setModelMatrix(gl4, modelMatrix);
 		gl4.glBindVertexArray(vertexArrayObject[0]);
-		texture.enable(gl4);
-		texture.bind(gl4);
-		programService.setTextureUnit(gl4, GL4.GL_TEXTURE0);
+		gl4.glActiveTexture(textureUnit);
+		gl4.glBindTexture(GL4.GL_TEXTURE_2D, texture.getTextureObject(gl4));
+		/*texture.enable(gl4);
+		texture.bind(gl4);*/
+		//programService.setTextureUnit(gl4, GL4.GL_TEXTURE0);
 		gl4.glEnable(GL4.GL_CULL_FACE);
 		gl4.glCullFace(GL4.GL_BACK);
 	    gl4.glFrontFace(GL4.GL_CW);
-	    gl4.glDrawElements(GL4.GL_TRIANGLES, indices.length, GL4.GL_UNSIGNED_INT, 0);
+	    gl4.glDrawElements(GL4.GL_TRIANGLE_STRIP, indices.length, GL4.GL_UNSIGNED_INT, 0);
 	    gl4.glDisable(GL4.GL_CULL_FACE);
-		texture.disable(gl4);
+		/*texture.disable(gl4);*/
 		gl4.glBindVertexArray(0);
 		gl4.glUseProgram(0);
 
@@ -213,5 +211,6 @@ public class MarsScene implements IGfxThreeDObject {
 		// TODO Auto-generated method stub
 
 	}
+
 
 }

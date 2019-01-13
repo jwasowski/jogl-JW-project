@@ -1,5 +1,6 @@
 package gfxJWproject.Application;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 import com.jogamp.newt.event.WindowAdapter;
@@ -9,8 +10,11 @@ import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.util.FPSAnimator;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
 
 import gfxJWproject.ThreeDimensionObjects.IGfxThreeDObject;
 import gfxJWproject.ThreeDimensionObjects.KDron;
@@ -36,6 +40,7 @@ public class NewtWindowMars implements GLEventListener{
 	private float[] viewMatrix = new float[16];
 	private int width;
 	private int height;
+	private Texture texture;
 	
 	public NewtWindowMars(String name, int width, int height) {
 		this.width = width;
@@ -68,6 +73,26 @@ public class NewtWindowMars implements GLEventListener{
 		program = textureProgramService.initProgram(gl4);
 		currentlyDrawn.setModelProgram(program);
 		currentlyDrawn.init(drawable);
+		textureProgramService.setTextureUnit(gl4, GL4.GL_TEXTURE0);
+		try {
+			texture = TextureIO.newTexture(this.getClass().getResource("/textures/mars_1k_color.jpg"), false, null);
+			gl4.glTexParameteri(GL4.GL_TEXTURE_2D, GL4.GL_TEXTURE_MIN_FILTER, GL4.GL_LINEAR);
+			gl4.glTexParameteri(GL4.GL_TEXTURE_2D, GL4.GL_TEXTURE_MAG_FILTER, GL4.GL_LINEAR);
+			gl4.glTexParameteri(GL4.GL_TEXTURE_2D, GL4.GL_TEXTURE_WRAP_S, GL4.GL_REPEAT);
+			gl4.glTexParameteri(GL4.GL_TEXTURE_2D, GL4.GL_TEXTURE_WRAP_T, GL4.GL_REPEAT);
+			System.out.println("Texture est. size: "+texture.getEstimatedMemorySize());
+			System.out.println("Texture Height: "+texture.getHeight());
+			System.out.println("Texture Width: "+texture.getWidth());
+			currentlyDrawn.setTextureUnit(textureProgramService.textureUnit);
+			currentlyDrawn.setTexture(texture);
+		} catch (GLException e) {
+			System.err.println("Error loading texture");
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.err.println("Error loading texture");
+			e.printStackTrace();
+		}
+		
 		matrixService.setupUnitMatrix(viewMatrix);
 		matrixService.translate(viewMatrix, 0, 0, -6);
 		System.out.println("View matrix-init: " + Arrays.toString(viewMatrix));
