@@ -179,13 +179,7 @@ public class KDron implements IGfxThreeDObject {
 	}
 
 	@Override
-	public void setTexture(Texture t) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setTextureUnit(int unit) {
+	public void setTextureName(IntBuffer textureName) {
 		// TODO Auto-generated method stub
 		
 	}
