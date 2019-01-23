@@ -10,7 +10,9 @@ uniform mat4 projectionMatrix;
 
 out vec2 tex_coord;
 
+
 void main(void){
     gl_Position = (projectionMatrix * viewMatrix * modelMatrix) * in_position;
     tex_coord = in_texture;
+   
 }

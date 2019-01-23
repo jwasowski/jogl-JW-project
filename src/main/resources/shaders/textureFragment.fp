@@ -2,10 +2,14 @@
 
 in vec2 tex_coord;
 
-out vec4 out_color;
-
+out vec4 color;
 uniform sampler2D texture_unit;
 
 void main(void){
-    out_color = texture(texture_unit, tex_coord);
+		
+	color = texture(texture_unit, tex_coord);
+	//gl_FragColor = vec4(1.0f,0.0f,1.0f,1.0f);
+	
+   
+   
 }

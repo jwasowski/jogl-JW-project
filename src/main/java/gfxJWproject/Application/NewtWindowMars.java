@@ -1,6 +1,7 @@
 package gfxJWproject.Application;
 
 import java.io.IOException;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +12,7 @@ import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.event.WindowAdapter;
 import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.DebugGL4;
 import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
@@ -19,6 +21,7 @@ import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.GLBuffers;
+import com.jogamp.opengl.util.texture.ImageType;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
@@ -53,14 +56,14 @@ public class NewtWindowMars implements GLEventListener, KeyListener {
 	private float[] viewMatrix = new float[16];
 	private int width;
 	private int height;
-	//private TextureData textureData;
+	// private TextureData textureData;
 	private short lastInput;
 	private InputController currentController;
 	private InputController orthoController;
 	private InputController projController;
 	private TextureService textureService;
-	private IntBuffer textureName = GLBuffers.newDirectIntBuffer(1);
-	private List<TextureData> textureData = new ArrayList<TextureData>();
+	//private IntBuffer textureName = GLBuffers.newDirectIntBuffer(1);
+	private Texture marsTexture;
 
 	public NewtWindowMars(String name, int width, int height) {
 		this.width = width;
@@ -73,7 +76,7 @@ public class NewtWindowMars implements GLEventListener, KeyListener {
 		orthoController = new OrthoController(marsScene, matrixService);
 		projController = new ProjectionController(marsScene, matrixService);
 		/** Remember to control value of numberOfTexture */
-		textureService = new TextureService(deallocator, 1);
+		textureService = new TextureService(deallocator, 0, textureProgramService);
 		currentController = projController;
 		glp = GLProfile.getDefault();
 		caps = new GLCapabilities(glp);
@@ -97,26 +100,36 @@ public class NewtWindowMars implements GLEventListener, KeyListener {
 	@Override
 	public void init(GLAutoDrawable drawable) {
 		final GL4 gl4 = drawable.getGL().getGL4();
+		gl4.glEnable(GL4.GL_DEBUG_OUTPUT);
+		drawable.setGL(new DebugGL4(gl4));
 		program = textureProgramService.initProgram(gl4);
-		marsScene.setModelProgram(program);
-		marsScene.init(drawable);
 
 		String url = "/textures/mars_1k_color.jpg";
-		textureData.add(textureService.initTexture(gl4, url, 0));
-		//textureData.add(textureService.initTexture(gl4, url, 0));
-		textureProgramService.setTextureUnit(gl4,
-				GL4.GL_TEXTURE0/* textureName.get(0) */);
-		marsScene.setTextureName(textureService.textureName);
+		String url2 = "/textures/ziemia.tga";
+		String url3 = "/textures/gray.jpg";
+		String url4 = "/textures/gray.png";
+		FloatBuffer buffer = GLBuffers.newDirectFloatBuffer(new float[1048576+32]);
+		marsTexture = textureService.createRgbaFloatTexture(gl4, buffer, 512, 512);//initTexture(gl4, url4, 0);
+		//System.out.println("GL4.GL_TEXTURE0: " + GL4.GL_TEXTURE0+0);
+		//textureProgramService.setTextureUnit(gl4, 0);
+		if(gl4.glGetError() != 0 || gl4.glGetError() != GL4.GL_NO_ERROR){
+			System.err.println("Error code in Mars-init-1: " + gl4.glGetError());}
+		marsScene.setTextureUnit(GL4.GL_TEXTURE0);
+		marsScene.setTexture(marsTexture);
+		marsScene.setModelProgram(program);
 		
-		//spacePlane.setTextureName(textureService.textureName.duplicate());
+		marsScene.init(drawable);
+
+		
 		textureProgramService.setViewMatrix(gl4, currentController.viewMatrix, program);
+		System.out.println("View matrix-init: " + Arrays.toString(currentController.viewMatrix));
 		projectionMatrix = matrixService.createProjectionMatrix(60, (float) width / (float) height, 0.5f, 100.0f);
 		System.out.println("Projection matrix-init: " + Arrays.toString(projectionMatrix));
 		textureProgramService.setProjectionMatrix(gl4, projectionMatrix, program);
 		System.out.println("AutoSwapStatus: " + window.getAutoSwapBufferMode());
 		gl4.glEnable(GL4.GL_DEPTH_TEST);
 		gl4.glDepthFunc(GL4.GL_LESS);
-		gl4.glClearColor(0.25f, 0.75f, 0.35f, 0.0f);
+		 gl4.glClearColor(0.25f, 0.75f, 0.35f, 0.0f);
 		//gl4.glClearColor(0.8f, 0.9f, 1.0f, 0.0f);
 
 	}
@@ -130,13 +143,13 @@ public class NewtWindowMars implements GLEventListener, KeyListener {
 	@Override
 	public void display(GLAutoDrawable drawable) {
 		final GL4 gl4 = drawable.getGL().getGL4();
+		gl4.glClear(GL4.GL_COLOR_BUFFER_BIT | GL4.GL_DEPTH_BUFFER_BIT);
 		marsScene.display(drawable);
-		//spacePlane.display(drawable);
-		// System.out.println("View matrix-display: " +
-		// Arrays.toString(currentController.viewMatrix));
-		textureProgramService.setViewMatrix(gl4, currentController.viewMatrix, program);
+		// spacePlane.display(drawable);
+
+		textureProgramService.cameraShaderService.setViewMatrix(gl4, currentController.viewMatrix, program);
 		textureProgramService.setProjectionMatrix(gl4, projectionMatrix, program);
-		gl4.glUseProgram(0);
+		// gl4.glUseProgram(0);
 	}
 
 	@Override

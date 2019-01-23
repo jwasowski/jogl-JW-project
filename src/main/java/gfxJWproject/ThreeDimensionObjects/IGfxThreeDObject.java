@@ -4,6 +4,7 @@ import java.nio.IntBuffer;
 
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureData;
 
 public interface IGfxThreeDObject {
 //TODO Add methods for translations etc. in future versions
@@ -19,8 +20,11 @@ public interface IGfxThreeDObject {
 
 	void reshape(GLAutoDrawable drawable, int x, int y, int width, int height);
 
-	void setTextureName(IntBuffer textureName);
+	void setTextureBuffer(IntBuffer textureName);
 	// Object rotations are inverted
+	void setTextureUnit(int textureUnit);
+	
+	void setTexture(Texture texture);
 	void rotateXAxisUp();
 
 	void rotateXAxisDown();

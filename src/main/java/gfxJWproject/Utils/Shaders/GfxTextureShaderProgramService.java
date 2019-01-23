@@ -29,6 +29,7 @@ public class GfxTextureShaderProgramService extends GfxModelShaderProgramService
 	}
 
 	public void setTextureUnit(GL4 gl4, int t) {
+		gl4.glUseProgram(textureProgram);
 		gl4.glUniform1i(textureUnit, t);
 	}
 

@@ -8,6 +8,7 @@ import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureData;
 
 import gfxJWproject.Utils.DeallocationHelper;
 import gfxJWproject.Utils.MatrixService;
@@ -179,7 +180,19 @@ public class KDron implements IGfxThreeDObject {
 	}
 
 	@Override
-	public void setTextureName(IntBuffer textureName) {
+	public void setTextureBuffer(IntBuffer textureName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setTextureUnit(int textureUnit) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setTexture(Texture texture) {
 		// TODO Auto-generated method stub
 		
 	}

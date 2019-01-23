@@ -11,7 +11,7 @@ public class ProjectionController extends InputController {
 		this.managedObject = managedObject;
 		this.matrixService = matrixService;
 		 matrixService.setupUnitMatrix(super.viewMatrix);
-		 matrixService.translate(super.viewMatrix, 0, 0, -4);
+		 matrixService.translate(super.viewMatrix, 0, 0, -10);
 	}
 
 	@Override
