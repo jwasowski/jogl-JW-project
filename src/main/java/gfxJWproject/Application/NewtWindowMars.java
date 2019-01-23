@@ -108,8 +108,9 @@ public class NewtWindowMars implements GLEventListener, KeyListener {
 		String url2 = "/textures/ziemia.tga";
 		String url3 = "/textures/gray.jpg";
 		String url4 = "/textures/gray.png";
+		//TODO Swap methods to checkout the other method
 		FloatBuffer buffer = GLBuffers.newDirectFloatBuffer(new float[1048576+32]);
-		marsTexture = textureService.createRgbaFloatTexture(gl4, buffer, 512, 512);//initTexture(gl4, url4, 0);
+		marsTexture = textureService./*createRgbaFloatTexture(gl4, buffer, 512, 512);*/initTexture(gl4, url4, 0);
 		//System.out.println("GL4.GL_TEXTURE0: " + GL4.GL_TEXTURE0+0);
 		//textureProgramService.setTextureUnit(gl4, 0);
 		if(gl4.glGetError() != 0 || gl4.glGetError() != GL4.GL_NO_ERROR){

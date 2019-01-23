@@ -43,6 +43,7 @@ public class TextureService {
 				System.err.println("Error code in TextureService-init-0: " + gl4.glGetError());
 			}
 			System.out.println("PixelFOrmat: "+data.getPixelFormat()+" IntFormat: "+data.getInternalFormat()+" PixelType: "+data.getPixelType());
+			
 			Texture texture = TextureIO.newTexture(data);
 			
 			System.out.println("TextureTarget: " + texture.getTarget() + " GL4.GL_TEXTURE_2D: " + GL4.GL_TEXTURE_2D);
@@ -66,10 +67,13 @@ public class TextureService {
 			System.out.println(texture.toString());
 			
 			texture.enable(gl4);
+			
 			if (gl4.glGetError() != 0 || gl4.glGetError() != GL4.GL_NO_ERROR) {
 				System.err.println("Error code in TextureService-init-5: " + gl4.glGetError());
 			}
+			
 			texture.bind(gl4);
+			
 			if (gl4.glGetError() != 0 || gl4.glGetError() != GL4.GL_NO_ERROR) {
 				System.err.println("Error code in TextureService-init-6: " + gl4.glGetError());
 			}
@@ -91,7 +95,8 @@ public class TextureService {
 	}
 	
 	public Texture createRgbaFloatTexture(GL4 gl, FloatBuffer buffer, int width, int height) {
-	    boolean flipVertically = false;
+		programService.setTextureUnit(gl, 0);
+		boolean flipVertically = false;
 
 	    int numTextures = 1;
 	    int[] textureHandles = new int[numTextures];

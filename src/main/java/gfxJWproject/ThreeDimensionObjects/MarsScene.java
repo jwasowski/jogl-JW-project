@@ -52,7 +52,8 @@ public class MarsScene implements IGfxThreeDObject {
 		this.n=n;
 		this.r=r;
 		this.R=R;
-		textureVertex = new float[((m+1)*(n+1))*10]; //651*6
+		//TODO Remember to check the size of array
+		textureVertex = new float[((m+1)*(n+1))*6]; //651*6
 		indices= new int[2*n*(m + 1)];
 	}
 
