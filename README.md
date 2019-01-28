@@ -1,6 +1,6 @@
 # jogl-JW-project Computer graphics class Project
 
-This project is about learning how to use OpenGL. It is written in Java using "Java OpenGL" from JoGAmp project https://jogamp.org/ 
+This project is about learning how to use OpenGL. It is written in Java using "Java OpenGL" from JoGAmp project https://jogamp.org/ <br />
 Currently program is emulating 3D environment, displaying a Kdron https://en.wikipedia.org/wiki/K-dron and allowing you to rotate object, zooming in / out as well as switching matrices from Perspective Projection to Orthogonal Projection.
 
 ## Status
@@ -29,5 +29,5 @@ PageDown - zoom out
 
 ## License
 
-This project is licensed under the GNU General Public License v2.0 - see the [LICENSE.md](LICENSE) file for details
+This project is licensed under the GNU General Public License v2.0 - see the [LICENSE.md](LICENSE) file for details <br />
 JogAmp license - see https://jogamp.org/git/?p=jogl.git;a=blob;f=LICENSE.txt for details
