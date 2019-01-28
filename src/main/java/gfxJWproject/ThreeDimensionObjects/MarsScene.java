@@ -193,9 +193,9 @@ public class MarsScene implements IGfxThreeDObject {
 		final GL4 gl4 = drawable.getGL().getGL4();
 		
 		
-		
-		gl4.glBindVertexArray(vertexArrayObject[0]);
 		gl4.glUseProgram(textureProgram);
+		gl4.glBindVertexArray(vertexArrayObject[0]);
+		
 		programService.setModelMatrix(gl4, modelMatrix);
 		gl4.glActiveTexture(textureUnit);
 		if(gl4.glGetError() != 0 || gl4.glGetError() != GL4.GL_NO_ERROR){
@@ -208,9 +208,9 @@ public class MarsScene implements IGfxThreeDObject {
 		if(gl4.glGetError() != 0 || gl4.glGetError() != GL4.GL_NO_ERROR){
 			System.err.println("Error code in MarsScene-display-3: " + gl4.glGetError());}
 		//programService.setTextureUnit(gl4, textureUnit);
-		gl4.glEnable(GL4.GL_CULL_FACE);
+		/*gl4.glEnable(GL4.GL_CULL_FACE);
 		gl4.glCullFace(GL4.GL_BACK);
-	    gl4.glFrontFace(GL4.GL_CW);
+	    gl4.glFrontFace(GL4.GL_CW);*/
 	    gl4.glDrawElements(GL4.GL_TRIANGLE_STRIP, indices.length, GL4.GL_UNSIGNED_INT, 0);
 	    if(gl4.glGetError() != 0 || gl4.glGetError() != GL4.GL_NO_ERROR){
 			System.err.println("Error code in MarsScene-display-4: " + gl4.glGetError());}

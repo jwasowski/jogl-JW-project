@@ -71,10 +71,10 @@ public class NewtWindowMars implements GLEventListener, KeyListener {
 		textureProgramService = new GfxTextureShaderProgramService();
 		matrixService = new MatrixService();
 		deallocator = new DeallocationHelper();
-		marsScene = new MarsScene(textureProgramService, matrixService, deallocator, 20, 30, 2.0f, 0.75f);
+		marsScene = new MarsScene(textureProgramService, matrixService, deallocator, 20, 30, 2.0f, 1.0f);
 		spacePlane = new SpacePlane(textureProgramService, matrixService, deallocator, 30, 40);
-		orthoController = new OrthoController(marsScene, matrixService);
-		projController = new ProjectionController(marsScene, matrixService);
+		orthoController = new OrthoController(spacePlane, matrixService);
+		projController = new ProjectionController(spacePlane, matrixService);
 		/** Remember to control value of numberOfTexture */
 		textureService = new TextureService(deallocator, 0, textureProgramService);
 		currentController = projController;
@@ -109,18 +109,20 @@ public class NewtWindowMars implements GLEventListener, KeyListener {
 		String url3 = "/textures/gray.jpg";
 		String url4 = "/textures/gray.png";
 		//TODO Swap methods to checkout the other method
-		FloatBuffer buffer = GLBuffers.newDirectFloatBuffer(new float[1048576+32]);
+		//FloatBuffer buffer = GLBuffers.newDirectFloatBuffer(new float[1048576+32]);
 		marsTexture = textureService./*createRgbaFloatTexture(gl4, buffer, 512, 512);*/initTexture(gl4, url4, 0);
 		//System.out.println("GL4.GL_TEXTURE0: " + GL4.GL_TEXTURE0+0);
 		//textureProgramService.setTextureUnit(gl4, 0);
 		if(gl4.glGetError() != 0 || gl4.glGetError() != GL4.GL_NO_ERROR){
 			System.err.println("Error code in Mars-init-1: " + gl4.glGetError());}
-		marsScene.setTextureUnit(GL4.GL_TEXTURE0);
+		/*marsScene.setTextureUnit(GL4.GL_TEXTURE0);
 		marsScene.setTexture(marsTexture);
-		marsScene.setModelProgram(program);
-		
-		marsScene.init(drawable);
-
+		marsScene.setModelProgram(program);*/
+		spacePlane.setTextureUnit(GL4.GL_TEXTURE0);
+		spacePlane.setTexture(marsTexture);
+		spacePlane.setModelProgram(program);
+		//marsScene.init(drawable);
+		spacePlane.init(drawable);
 		
 		textureProgramService.setViewMatrix(gl4, currentController.viewMatrix, program);
 		System.out.println("View matrix-init: " + Arrays.toString(currentController.viewMatrix));
@@ -130,14 +132,15 @@ public class NewtWindowMars implements GLEventListener, KeyListener {
 		System.out.println("AutoSwapStatus: " + window.getAutoSwapBufferMode());
 		gl4.glEnable(GL4.GL_DEPTH_TEST);
 		gl4.glDepthFunc(GL4.GL_LESS);
-		 gl4.glClearColor(0.25f, 0.75f, 0.35f, 0.0f);
-		//gl4.glClearColor(0.8f, 0.9f, 1.0f, 0.0f);
+		 //gl4.glClearColor(0.25f, 0.75f, 0.35f, 0.0f);
+		gl4.glClearColor(0.8f, 0.9f, 1.0f, 0.0f);
 
 	}
 
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
-		marsScene.dispose(drawable);
+		//marsScene.dispose(drawable);
+		spacePlane.dispose(drawable);
 		textureService.disposeTextureBuffer();
 	}
 
@@ -145,11 +148,12 @@ public class NewtWindowMars implements GLEventListener, KeyListener {
 	public void display(GLAutoDrawable drawable) {
 		final GL4 gl4 = drawable.getGL().getGL4();
 		gl4.glClear(GL4.GL_COLOR_BUFFER_BIT | GL4.GL_DEPTH_BUFFER_BIT);
-		marsScene.display(drawable);
-		// spacePlane.display(drawable);
+		//marsScene.display(drawable);
+		
 
 		textureProgramService.cameraShaderService.setViewMatrix(gl4, currentController.viewMatrix, program);
 		textureProgramService.setProjectionMatrix(gl4, projectionMatrix, program);
+		spacePlane.display(drawable);
 		// gl4.glUseProgram(0);
 	}
 
@@ -159,7 +163,8 @@ public class NewtWindowMars implements GLEventListener, KeyListener {
 		projectionMatrix = matrixService.createProjectionMatrix(60, (float) width / (float) height, 0.1f, 100.0f);
 		System.out.println("Projection matrix-reshape: " + Arrays.toString(projectionMatrix));
 		textureProgramService.setProjectionMatrix(gl4, projectionMatrix, program);
-		marsScene.reshape(drawable, 0, 0, width, height);
+		//marsScene.reshape(drawable, 0, 0, width, height);
+		spacePlane.reshape(drawable, 0, 0, width, height);
 	}
 
 	private void shutDown() {

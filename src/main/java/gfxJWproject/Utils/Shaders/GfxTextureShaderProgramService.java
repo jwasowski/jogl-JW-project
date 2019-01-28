@@ -14,7 +14,7 @@ public class GfxTextureShaderProgramService extends GfxModelShaderProgramService
 
 	public int initProgram(GL4 gl4) {
 		textureProgram = modelShaderService.initProgram(gl4);
-		textureUnit = getUniformLocation("texture_unit", gl4);
+		//textureUnit = getUniformLocation("texture_unit", gl4);
 
 		return textureProgram;
 	}

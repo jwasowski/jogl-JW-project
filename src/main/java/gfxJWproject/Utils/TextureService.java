@@ -32,7 +32,7 @@ public class TextureService {
 
 	public Texture/* Data */ initTexture(GL4 gl4, String url, int bufferIndex) {
 		try {
-			programService.setTextureUnit(gl4, 0);
+			//programService.setTextureUnit(gl4, 0);
 			gl4.glEnable(GL4.GL_TEXTURE_2D);
 			TextureData data = TextureIO.newTextureData(gl4.getGLProfile(), this.getClass().getResource(url), false,
 					/*ImageType.T_TGA*/ImageType.T_PNG);
@@ -66,7 +66,7 @@ public class TextureService {
 
 			System.out.println(texture.toString());
 			
-			texture.enable(gl4);
+			//texture.enable(gl4);
 			
 			if (gl4.glGetError() != 0 || gl4.glGetError() != GL4.GL_NO_ERROR) {
 				System.err.println("Error code in TextureService-init-5: " + gl4.glGetError());
