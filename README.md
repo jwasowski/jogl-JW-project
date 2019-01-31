@@ -5,7 +5,7 @@ Currently program is emulating 3D environment, displaying a Kdron https://en.wik
 
 ## Status
 
-jogl-JW-project Computer graphics class Project will be continued on LWJGL https://www.lwjgl.org/#learn-more
+jogl-JW-project Computer graphics class Project will be continued on LWJGL https://www.lwjgl.org/#learn-more or Ardor3D (JogAmp continuation).
 
 
 ### Requirements
